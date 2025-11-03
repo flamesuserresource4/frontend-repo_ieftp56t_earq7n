@@ -1,28 +1,43 @@
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import Sidebar from './components/Sidebar.jsx';
+import ChannelList from './components/ChannelList.jsx';
+import ChatWindow from './components/ChatWindow.jsx';
+import MessageInput from './components/MessageInput.jsx';
+import { Moon, Sun } from 'lucide-react';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [dark, setDark] = useState(true);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) root.classList.add('dark');
+    else root.classList.remove('dark');
+  }, [dark]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-950 dark:to-neutral-900 text-neutral-900 dark:text-neutral-100">
+      <header className="h-12 flex items-center px-3 gap-2 border-b border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-neutral-950/70 backdrop-blur">
+        <div className="font-semibold">EchoChat</div>
+        <div className="ml-auto">
           <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            onClick={() => setDark((d) => !d)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+            aria-label="Toggle Theme"
           >
-            Count is {count}
+            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span className="text-sm">{dark ? 'Light' : 'Dark'}</span>
           </button>
         </div>
-      </div>
-    </div>
-  )
-}
+      </header>
 
-export default App
+      <main className="h-[calc(100vh-3rem)] flex">
+        <Sidebar />
+        <ChannelList />
+        <div className="flex-1 flex flex-col">
+          <ChatWindow />
+          <MessageInput />
+        </div>
+      </main>
+    </div>
+  );
+}
